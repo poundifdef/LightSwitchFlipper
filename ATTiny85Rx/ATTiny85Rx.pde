@@ -23,7 +23,7 @@
 */
 
 int irPin = 1; //Sensor pin 1 wired to Arduino's pin 2
-int statLED = 0; //Toggle the status LED every time Power is pressed
+int statLED = 2; //Toggle the status LED every time Power is pressed
 int start_bit = 2200; //Start bit threshold (Microseconds)
 int bin_1 = 1000; //Binary 1 threshold (Microseconds)
 int bin_0 = 400; //Binary 0 threshold (Microseconds)
@@ -38,6 +38,15 @@ int bin_0 = 400; //Binary 0 threshold (Microseconds)
 
 SoftwareServo myservo;
 
+void turnWithEnoughTime(int angle) {
+  myservo.write(angle);
+      
+    for (int i = 0; i < 10; i++) {
+    delay(50);
+    SoftwareServo::refresh();
+    }
+}
+
 void setup() {
   
 //  pwm_init();
@@ -48,61 +57,38 @@ void setup() {
   pinMode(irPin, INPUT);
 
   myservo.attach(0);
-  
+  turnWithEnoughTime(75);
 
   //Serial.begin(9600);
   //Serial.println("Waiting: ");
 }
 
-void loop() {
-      myservo.write(75);
-    delay(500);
-    SoftwareServo::refresh();
 
-while(true) {
+
+void loop() {
+
+
   int key = getIRKey();		    //Fetch the key
   
   if (key == 144) {
     digitalWrite(statLED, HIGH);
+    turnWithEnoughTime(180);
+  delay(500);
+  
+  turnWithEnoughTime(75);
+    
+
+    
   } else if (key == 145) {
     digitalWrite(statLED, LOW);
-  }
-}
-
-
-  //pwm_init();
-    //pwm_set( 75 );
-
-  /*
+turnWithEnoughTime(0);
+  delay(500);
   
-  if(key != 0) //Ignore keys that are zero
-  {
-        
+  turnWithEnoughTime(75);
+  
+  }
 
-//    Serial.print("Key Recieved: ");
-    
-    switch(key)
-    {
-      case 144: digitalWrite(statLED, HIGH); break; // Serial.print("CH Up"); break;
-      case 145: digitalWrite(statLED, LOW);  break; // Serial.print("CH Down"); break;
-      //case 146:// Serial.print("VOL Right"); break;
-      //case 147:// Serial.print("VOL Left"); break;
-      //case 148:// Serial.print("Mute"); break;
-      //case 165:// Serial.print("AV/TV"); break;
-      case 149:
-     
-        //Serial.print("Power");
-        if(digitalRead(statLED) != 1) //This toggles the statLED every time power button is hit
-          digitalWrite(statLED, HIGH);
-        else
-          digitalWrite(statLED, LOW);
-        break;
 
-      //default: Serial.print(key);
-    }
-
-    //Serial.println();
-  } */
 }
 
 int getIRKey() {
