@@ -1,7 +1,9 @@
 #include <IRremote.h>
-#include <Servo.h>
+#include <SoftwareServo.h>
 
-Servo myservo;
+//include <Servo.h>
+
+SoftwareServo myservo;
 
 
 int RECV_PIN = 3;
@@ -32,11 +34,11 @@ void loop() {
       
       myservo.attach(9);
       
-      if (results.value == 0x1D00D926) {
+      if (results.value == 0x1D0059A6) {
         myservo.write(180);
         //Serial.println("up");
          
-      } else if (results.value == 0x1D0059A6) {
+      } else if (results.value == 0x1D00D926) {
           myservo.write(0);
         //Serial.println("down");
       }

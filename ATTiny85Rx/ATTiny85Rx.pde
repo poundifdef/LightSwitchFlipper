@@ -1,3 +1,5 @@
+
+#include <SoftwareServo.h>
 /*
   SparkFun Electronics 2010
   Playing with IR remote control
@@ -34,18 +36,44 @@ int bin_0 = 400; //Binary 0 threshold (Microseconds)
 //int bin_1 = 62; //Binary 1 threshold (Microseconds)
 //int bin_0 = 25; //Binary 0 threshold (Microseconds)
 
+SoftwareServo myservo;
+
 void setup() {
+  
+//  pwm_init();
+  
   pinMode(statLED, OUTPUT);
   digitalWrite(statLED, LOW);
 
   pinMode(irPin, INPUT);
+
+  myservo.attach(0);
+  
 
   //Serial.begin(9600);
   //Serial.println("Waiting: ");
 }
 
 void loop() {
+      myservo.write(75);
+    delay(500);
+    SoftwareServo::refresh();
+
+while(true) {
   int key = getIRKey();		    //Fetch the key
+  
+  if (key == 144) {
+    digitalWrite(statLED, HIGH);
+  } else if (key == 145) {
+    digitalWrite(statLED, LOW);
+  }
+}
+
+
+  //pwm_init();
+    //pwm_set( 75 );
+
+  /*
   
   if(key != 0) //Ignore keys that are zero
   {
@@ -61,7 +89,7 @@ void loop() {
       //case 147:// Serial.print("VOL Left"); break;
       //case 148:// Serial.print("Mute"); break;
       //case 165:// Serial.print("AV/TV"); break;
-      /*case 149:
+      case 149:
      
         //Serial.print("Power");
         if(digitalRead(statLED) != 1) //This toggles the statLED every time power button is hit
@@ -69,12 +97,12 @@ void loop() {
         else
           digitalWrite(statLED, LOW);
         break;
-*/
+
       //default: Serial.print(key);
     }
 
     //Serial.println();
-  } 
+  } */
 }
 
 int getIRKey() {
